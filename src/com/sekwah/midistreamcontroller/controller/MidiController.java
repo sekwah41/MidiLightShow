@@ -147,7 +147,12 @@ public class MidiController {
             int x = data[1] % 16;
 
             if(data[2] == 127) {
-                this.window.runKey(x,y);
+                if(data[0] == -112) {
+                   this.window.runGrid(x,y);
+                }
+                else {
+                    this.window.runTopBar(data[1] - 104);
+                }
             }
         }
         public void close() {}
@@ -155,6 +160,10 @@ public class MidiController {
 
     public void setKey(int key, int color, int status){
         this.sendMessage(status, key, color);
+    }
+
+    public void setKey(int key, LightData color, LightStatus status){
+        this.sendMessage(status.getValue(), key, color.getValue());
     }
 
     public void setGrid(int x, int y, LightData color, LightStatus status){
