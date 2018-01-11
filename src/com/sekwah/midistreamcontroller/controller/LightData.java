@@ -23,7 +23,12 @@ public enum LightData {
     YELLOW_OFF(OFF.getValue()),
     YELLOW_LOW(RED_LOW.getValue() + GREEN_LOW.getValue()),
     YELLOW_MEDIUM(RED_MEDIUM.getValue() + GREEN_MEDIUM.getValue()),
-    YELLOW_HIGH(RED_HIGH.getValue() + GREEN_HIGH.getValue()),;
+    YELLOW_HIGH(RED_HIGH.getValue() + GREEN_HIGH.getValue()),
+
+    ORANGE(RED_HIGH.getValue() + GREEN_LOW.getValue()),
+    AMBER(RED_HIGH.getValue() + GREEN_MEDIUM.getValue()),
+    SLIGHTLY_YELLOW_GREEN(RED_LOW.getValue() + GREEN_HIGH.getValue()),
+    YELLOW_GREEN(RED_MEDIUM.getValue() + GREEN_HIGH.getValue());
 
     private final int value;
 

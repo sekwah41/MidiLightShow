@@ -7,4 +7,6 @@ public interface Menu {
     void runGrid(int x, int y);
 
     void runTopBar(int topBarButton);
+
+    void sideBar(int y);
 }

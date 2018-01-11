@@ -1,9 +1,9 @@
 package com.sekwah.midistreamcontroller;
 
+import com.sekwah.midistreamcontroller.animation.AnimationController;
 import com.sekwah.midistreamcontroller.controller.LightData;
 import com.sekwah.midistreamcontroller.controller.LightStatus;
 import com.sekwah.midistreamcontroller.controller.MidiController;
-import com.sekwah.midistreamcontroller.keys.Key;
 import com.sekwah.midistreamcontroller.lightdata.stored.PageButtons;
 import com.sekwah.midistreamcontroller.menu.Menu;
 import com.sekwah.midistreamcontroller.menu.PerformanceMenu;
@@ -17,6 +17,8 @@ public class ControllerWindow extends JFrame {
 
     public final MidiController midiController;
     public final JLabel keyLabel;
+    public final JTextField timeField;
+    public final AnimationController animController;
 
     //private Key[][] keyGrid = new Key[8][8];
 
@@ -24,10 +26,15 @@ public class ControllerWindow extends JFrame {
 
     private long nextTime = System.currentTimeMillis();
 
-    private long updateDelay = 20;
+    private long updateDelay = 10;
 
     public ArrayList<PageButtons> buttonPages = new ArrayList<>();
+
+    public int currentPage = 1;
+
     private Menu menu;
+
+    public int lastKeyPlayed = -1;
 
     public ControllerWindow() {
 
@@ -51,7 +58,7 @@ public class ControllerWindow extends JFrame {
 
         this.setTitle("SekC's LightShow");
 
-        this.setSize(300, 60);
+        this.setSize(370, 60);
 
         this.setLocationRelativeTo(null);
         this.setResizable(false);
@@ -62,11 +69,15 @@ public class ControllerWindow extends JFrame {
 
         this.add(keyLabel);
 
+        timeField = new JTextField("100");
+        timeField.setBounds(310, 3, 50, 20);
+
+        this.add(timeField);
+
         super.setVisible(true);
-
-        this.registerKeys();
-
         //this.showKeys();
+
+        animController = new AnimationController(midiController);
 
         this.setMenu(new PerformanceMenu(this));
 
@@ -74,7 +85,7 @@ public class ControllerWindow extends JFrame {
         thread.start();
     }
 
-    private void setMenu(Menu menu) {
+    public void setMenu(Menu menu) {
         this.menu = menu;
         menu.init();
     }
@@ -88,10 +99,15 @@ public class ControllerWindow extends JFrame {
     }
 
     public void runGrid(int x, int y) {
-        if(x < 0 || x > 7|| y < 0 || y > 7) {
+        if(x < 0 || x > 8 || y < 0 || y > 7) {
             return;
         }
-        menu.runGrid(x,y);
+        if(x != 8) {
+            menu.runGrid(x,y);
+        }
+        else {
+            menu.sideBar(y);
+        }
         /*Key key = this.keyGrid[x][y];
         if(key != null) {
             key.run();
@@ -109,6 +125,7 @@ public class ControllerWindow extends JFrame {
 
                     nextTime = nextTime + updateDelay;
                     long timeDelay = nextTime - System.currentTimeMillis();
+                    animController.updateDisplay(updateDelay);
                     //System.out.println(updateDelay);
                     if(timeDelay < 0) timeDelay = 0;
                     Thread.sleep(timeDelay);
@@ -117,35 +134,6 @@ public class ControllerWindow extends JFrame {
                 }
             }
         }
-    }
-
-    private void registerKeys() {
-
-
-        /*this.registerKey(new Key(this.midiController, 8, 8, LightData.GREEN_HIGH) {
-            @Override
-            public void run() {
-                long newTime = System.currentTimeMillis();
-                long pressDistance = newTime - lastPress;
-                lastPress = newTime;
-                if(pressDistance >= 10000) {
-                    return;
-                }
-                nextTime = newTime;
-                for(int i = 0; i < averageDelay.length - 1; i++) {
-                    averageDelay[i + 1] = averageDelay[i];
-                }
-                averageDelay[0] = pressDistance;
-                long average = 0;
-                for(int i = 0; i < averageDelay.length; i++) {
-                    average += averageDelay[i];
-                }
-                average /= averageDelay.length;
-                if(average < 10000) {
-                    updateDelay = average;
-                }
-            }
-        });*/
     }
 
     /*private void registerKey(Key key) {

@@ -1,9 +1,19 @@
 package com.sekwah.midistreamcontroller.lightdata.stored;
 
-import com.sekwah.midistreamcontroller.lightdata.ButtonInfo;
-
 public class KeyFrame {
-    public ButtonState[] keyFrame = new ButtonState[8 * 8];
+    /**
+     * Array of light color codes
+     */
+    public int[] buttons = new int[8 * 8];
 
     public int frameLength = 20;
+
+    public KeyFrame copy() {
+        KeyFrame keyFrame = new KeyFrame();
+        keyFrame.frameLength = frameLength;
+        for (int i = 0; i < this.buttons.length; i++) {
+            keyFrame.buttons[i] = this.buttons[i];
+        }
+        return keyFrame;
+    }
 }
