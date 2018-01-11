@@ -1,5 +1,8 @@
 package com.sekwah.midistreamcontroller;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.sekwah.midistreamcontroller.animation.AnimationController;
 import com.sekwah.midistreamcontroller.controller.LightData;
 import com.sekwah.midistreamcontroller.controller.LightStatus;
@@ -11,6 +14,8 @@ import com.sekwah.midistreamcontroller.menu.PerformanceMenu;
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.*;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class ControllerWindow extends JFrame {
@@ -35,6 +40,8 @@ public class ControllerWindow extends JFrame {
     private Menu menu;
 
     public int lastKeyPlayed = -1;
+
+    public String projectName = "Project.json";
 
     public ControllerWindow() {
 
@@ -75,6 +82,18 @@ public class ControllerWindow extends JFrame {
         this.add(timeField);
 
         super.setVisible(true);
+
+        if(new File(projectName).exists()) {
+            try {
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(projectName));
+                Gson gson = new Gson();
+                java.lang.reflect.Type buttonPageType = new TypeToken<ArrayList<PageButtons>>(){}.getType();
+                buttonPages = gson.fromJson(bufferedReader, buttonPageType);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
         //this.showKeys();
 
         animController = new AnimationController(midiController);
@@ -165,6 +184,12 @@ public class ControllerWindow extends JFrame {
         this.closeLightsRev(LightData.RED_HIGH, LightStatus.STATUS_OFF);*/
         this.midiController.clearLaunchpad();
         this.dispose();
+        try (Writer writer = new FileWriter(projectName)) {
+            Gson gson = new GsonBuilder().create();
+            gson.toJson(buttonPages, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         System.exit(0);
     }
 

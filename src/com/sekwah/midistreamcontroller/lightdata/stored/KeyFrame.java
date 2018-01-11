@@ -6,7 +6,7 @@ public class KeyFrame {
      */
     public int[] buttons = new int[8 * 8];
 
-    public int frameLength = 20;
+    public int frameLength = 60;
 
     public KeyFrame copy() {
         KeyFrame keyFrame = new KeyFrame();
