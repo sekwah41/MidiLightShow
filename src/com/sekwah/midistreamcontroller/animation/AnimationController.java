@@ -1,5 +1,6 @@
 package com.sekwah.midistreamcontroller.animation;
 
+import com.sekwah.midistreamcontroller.controller.LightData;
 import com.sekwah.midistreamcontroller.controller.LightStatus;
 import com.sekwah.midistreamcontroller.controller.MidiController;
 import com.sekwah.midistreamcontroller.lightdata.LightPage;
@@ -26,6 +27,18 @@ public class AnimationController {
         for(AnimationTracker animTracker : trackers) {
             this.updateAnim(animTracker, timePassed);
         }
+        //this.sendDisplayUpdate();
+        this.sendRapidUpdate();
+    }
+
+    private void sendRapidUpdate() {
+        this.midiController.setKey(9, LightData.OFF, LightStatus.STATUS_ON);
+        for(int i = 0; i < currentPage.buttons.length; i += 2) {
+            this.midiController.sendMessage(146, wantedPage.buttons[i], wantedPage.buttons[i+1]);
+        }
+    }
+
+    private void sendDisplayUpdate() {
         for (int x = 0; x < 8; x++) {
             for (int y = 0; y < 8; y++) {
                 int buttonId = x + y * 8;
