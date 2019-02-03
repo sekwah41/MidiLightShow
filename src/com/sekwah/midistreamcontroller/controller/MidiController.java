@@ -13,7 +13,7 @@ import java.util.List;
 public class MidiController {
 
     // Documentation for messages
-    // https://d19ulaff0trnck.cloudfront.net/sites/default/files/novation/downloads/4080/launchpad-programmers-reference.pdf
+    // https://customer.novationmusic.com/support/downloads?brand=Novation&download_type=all
 
     /*public final static int STATUS_OFF     = 0x80; // type, key, vel
     public final static int STATUS_ON      = 0x90; // type, key, vel
